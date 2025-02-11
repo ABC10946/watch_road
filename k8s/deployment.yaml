@@ -1,28 +1,76 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: motion-detector
+  name: watch-road
   labels:
     app: motion-detector
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: watch-road
+  template:
+    metadata:
+      labels:
+        app: watch-road
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      containers:
+      - name: watch-road
+        image: ghcr.io/abc10946/watch_road
+        ports:
+        - containerPort: 8000
+        - containerPort: 9090
+        env:
+        - name: REDIS_HOST
+          value: "redis"
+        volumeMounts:
+        - mountPath: /data
+          name: watch-road-data
+      volumes:
+      - name: watch-road-data
+        persistentVolumeClaim:
+          claimName: watch-road-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: motion-detector
+      app: redis
   template:
     metadata:
       labels:
-        app: motion-detector
+        app: redis
     spec:
       containers:
-      - name: motion-detector
-        image: your-docker-image:latest
+      - name: redis
+        image: redis:6.0
         ports:
-        - containerPort: 8080
-        resources:
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        env:
-        - name: VIDEO_URL
-          value: "http://raspi43.local:8080/?action=stream"
+        - containerPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  ports:
+  - port: 6379
+  selector:
+    app: redis
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: watch-road-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: watch-road-ingress
+spec:
+  rules:
+  - host: watch-road.k8s.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: watch-road
+            port:
+              number: 8000

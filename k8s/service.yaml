@@ -12,3 +12,16 @@ spec:
       protocol: TCP
   selector:
     app: motion-detector
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: watch-road
+spec:
+  selector:
+    app: watch-road
+  ports:
+  - protocol: TCP
+    port: 8000
+    name: http
+    targetPort: 8000
