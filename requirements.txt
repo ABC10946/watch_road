@@ -1,0 +1,4 @@
+opencv-python
+prometheus_client
+numpy
+flask
