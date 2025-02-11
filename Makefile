@@ -5,3 +5,6 @@ docker-build:
 
 docker-push:
 	docker push $(DOCKER_IMAGE)
+
+docker-run:
+	docker run -p 8000:8000 -it --rm $(DOCKER_IMAGE)
