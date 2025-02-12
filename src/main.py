@@ -13,7 +13,7 @@ def main():
     video = cv2.VideoCapture(url)
 
     motion_detector = MotionDetector()
-    prometheus_metrics = PrometheusMetrics()
+    prometheus_metrics = PrometheusMetrics(redisEnabled=False)
 
     while True:
         ret, frame = video.read()
