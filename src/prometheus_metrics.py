@@ -1,6 +1,5 @@
 import redis
 from prometheus_client import start_http_server, Summary, Counter
-import time
 
 class PrometheusMetrics:
     def __init__(self, port=8000, redisEnabled=True):

@@ -1,7 +1,7 @@
 FROM ubuntu:24.04
 
 # Install Python
-RUN apt-get update && apt-get install -y python3 python3-pip
+RUN apt-get update && apt-get install -y python3 python3-pip ffmpeg
 
 # Install the dependencies
 RUN apt-get -y install libopencv-dev
