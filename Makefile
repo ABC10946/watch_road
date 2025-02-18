@@ -1,4 +1,4 @@
-DOCKER_IMAGE = "ghcr.io/abc10946/$(shell basename $(CURDIR))"
+DOCKER_IMAGE = "ghcr.io/abc10946/$(shell basename $(CURDIR)):$(shell git describe --tags --always --dirty)"
 
 docker-build:
 	docker build -t $(DOCKER_IMAGE) .
