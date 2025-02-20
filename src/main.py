@@ -17,23 +17,33 @@ def main():
 
     while True:
         ret, frame = video.read()
-        if ret:
-            frame = cv2.rotate(frame, cv2.ROTATE_180)
-            large_contours, _ = motion_detector.detect_motion(frame)
 
-            if len(large_contours) > 0:
-                prometheus_metrics.increment_motion_count()
-                print(time.time(), "Motion detected")
-            
-            frame = motion_detector.draw_contours(frame, large_contours)
+        if not ret:
+            print("Failed to read frame")
+            break
 
-            if not args.nogui:
-                cv2.namedWindow("Motion Detection", cv2.WINDOW_NORMAL)
-                cv2.imshow("Motion Detection", frame)
+        try:
+            if ret:
+                frame = cv2.rotate(frame, cv2.ROTATE_180)
+                large_contours, _ = motion_detector.detect_motion(frame)
 
-            key = cv2.waitKey(1)
-            if key == 27:
-                break
+                if len(large_contours) > 0:
+                    prometheus_metrics.increment_motion_count()
+                    print(time.time(), "Motion detected")
+                
+                frame = motion_detector.draw_contours(frame, large_contours)
+
+                if not args.nogui:
+                    cv2.namedWindow("Motion Detection", cv2.WINDOW_NORMAL)
+                    cv2.imshow("Motion Detection", frame)
+
+                key = cv2.waitKey(1)
+                if key == 27:
+                    break
+
+        except Exception as e:
+            print(e)
+            break
 
     video.release()
     if not args.nogui:
