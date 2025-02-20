@@ -5,7 +5,7 @@ metadata:
   labels:
     app: motion-detector
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: watch-road
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: watch-road
-        image: ghcr.io/abc10946/watch_road
+        image: ghcr.io/abc10946/watch_road:v1.0.1
         ports:
         - containerPort: 8000
         - containerPort: 9090
